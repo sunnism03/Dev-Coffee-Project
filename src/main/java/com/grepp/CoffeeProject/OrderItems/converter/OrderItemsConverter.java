@@ -2,6 +2,7 @@ package com.grepp.CoffeeProject.OrderItems.converter;
 
 import com.grepp.CoffeeProject.OrderItems.domain.OrderItems;
 import com.grepp.CoffeeProject.OrderItems.dto.OrderItemsRequestDTO;
+import com.grepp.CoffeeProject.OrderItems.dto.OrderItemsResponseDTO;
 import com.grepp.CoffeeProject.Products.domain.Products;
 import com.grepp.CoffeeProject.Products.repository.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,14 @@ public class OrderItemsConverter {
             orderItemsList.add(orderItem);
         }
         return orderItemsList;
+    }
+
+    public List<OrderItemsResponseDTO.OrderItemsDetailDTO> toOrderItemsDTOs(List<OrderItems> orderItemsList) {
+        List<OrderItemsResponseDTO.OrderItemsDetailDTO> orderItemsDetailDTOs = new ArrayList<>();
+        for(OrderItems orderItem : orderItemsList) {
+            OrderItemsResponseDTO.OrderItemsDetailDTO orderItemsDetailDTO = new OrderItemsResponseDTO.OrderItemsDetailDTO(orderItem.getSeq(), orderItem.getOrders().getOrderId(), orderItem.getProducts().getProductId(), orderItem.getPrice(), orderItem.getQuantity(), orderItem.getCategory());
+            orderItemsDetailDTOs.add(orderItemsDetailDTO);
+        }
+        return orderItemsDetailDTOs;
     }
 }

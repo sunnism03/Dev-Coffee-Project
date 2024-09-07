@@ -1,7 +1,6 @@
 package com.grepp.CoffeeProject.Orders.dto;
 
 import com.grepp.CoffeeProject.OrderItems.dto.OrderItemsRequestDTO;
-import com.grepp.CoffeeProject.Orders.domain.OrderStatus;
 
 import java.util.List;
 
@@ -63,6 +62,38 @@ public class OrdersRequestDTO {
                     ", email='" + email + '\'' +
                     ", postcode='" + postcode + '\'' +
                     ", orderItemsDTOs=" + orderItemsDTOs +
+                    '}';
+        }
+    }
+
+    public static class OrderEmailDTO {
+        private String email;
+
+        // 생성자
+        public OrderEmailDTO() {
+        }
+
+        public OrderEmailDTO(String email) {
+            this.email = email;
+        }
+
+
+        // Getter, Setter
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+
+        // toString
+
+        @Override
+        public String toString() {
+            return "OrderEmailDTO{" +
+                    "email='" + email + '\'' +
                     '}';
         }
     }

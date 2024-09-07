@@ -1,12 +1,10 @@
 package com.grepp.CoffeeProject.Orders.controller;
 
 import com.grepp.CoffeeProject.Orders.dto.OrdersRequestDTO;
+import com.grepp.CoffeeProject.Orders.dto.OrdersResponseDTO;
 import com.grepp.CoffeeProject.Orders.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -19,5 +17,8 @@ public class OrdersController {
         ordersService.createOrder(request);
     }
 
-
+    @GetMapping("/get")
+    public OrdersResponseDTO.OrderDetailDTO getOrderDetail(@RequestBody OrdersRequestDTO.OrderEmailDTO request) {
+        return ordersService.getOrderDetail(request);
+    }
 }

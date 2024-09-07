@@ -1,11 +1,8 @@
 package com.grepp.CoffeeProject.Orders.domain;
 
 import com.grepp.CoffeeProject.OrderItems.domain.OrderItems;
-import com.grepp.CoffeeProject.OrderItems.dto.OrderItemsRequestDTO;
-import com.grepp.CoffeeProject.Products.repository.ProductsRepository;
 import com.grepp.CoffeeProject.global.BaseEntity;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;

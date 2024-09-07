@@ -4,6 +4,7 @@ import com.grepp.CoffeeProject.OrderItems.domain.OrderItems;
 import com.grepp.CoffeeProject.Orders.converter.OrdersConverter;
 import com.grepp.CoffeeProject.Orders.domain.Orders;
 import com.grepp.CoffeeProject.Orders.dto.OrdersRequestDTO;
+import com.grepp.CoffeeProject.Orders.dto.OrdersResponseDTO;
 import com.grepp.CoffeeProject.Orders.repository.OrdersRepository;
 import com.grepp.CoffeeProject.Products.domain.Products;
 import com.grepp.CoffeeProject.Products.repository.ProductsRepository;
@@ -35,5 +36,10 @@ public class OrdersService {
             product.setStock(product.getStock() - productsNum);
             productsRepository.save(product);
         }
+    }
+
+    public OrdersResponseDTO.OrderDetailDTO getOrderDetail(OrdersRequestDTO.OrderEmailDTO email) {
+        Orders order = ordersRepository.findByEmail(email.getEmail());
+        return ordersConverter.toOrderDTO(order);
     }
 }
