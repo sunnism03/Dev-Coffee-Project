@@ -6,6 +6,8 @@ import com.grepp.CoffeeProject.Orders.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 public class OrdersController {
@@ -18,7 +20,7 @@ public class OrdersController {
     }
 
     @GetMapping("/get")
-    public OrdersResponseDTO.OrderDetailDTO getOrderDetail(@RequestBody OrdersRequestDTO.OrderEmailDTO request) {
+    public List<OrdersResponseDTO.OrderDetailDTO> getOrderDetail(@RequestBody OrdersRequestDTO.OrderEmailDTO request) {
         return ordersService.getOrderDetail(request);
     }
 }
