@@ -29,4 +29,9 @@ public class OrdersController {
     public void updateOrder(@RequestParam UUID orderId, @RequestBody OrdersRequestDTO.OrderDTO updateDTO) {
         ordersService.updateOrder(orderId, updateDTO);
     }
+
+    @DeleteMapping("/delete")
+    public void deleteOrder(@RequestParam UUID orderId) {
+        ordersService.deleteOrder(orderId);
+    }
 }

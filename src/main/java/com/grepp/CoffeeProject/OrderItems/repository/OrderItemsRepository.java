@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
-    void deleteByOrders(Orders order);
+    void deleteAllByOrders(Orders order);
 }

@@ -13,6 +13,7 @@ import com.grepp.CoffeeProject.Orders.repository.OrdersRepository;
 import com.grepp.CoffeeProject.Products.domain.Products;
 import com.grepp.CoffeeProject.Products.repository.ProductsRepository;
 import org.aspectj.weaver.ast.Or;
+import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class OrdersService {
     @Autowired
     private OrderItemsConverter orderItemsConverter;
 
+    @Transactional
     public void createOrder(OrdersRequestDTO.OrderDTO orderDTO){
         Orders order = ordersConverter.toOrdersEntity(orderDTO);
         ordersRepository.save(order);
@@ -52,6 +54,7 @@ public class OrdersService {
         }
     }
 
+    @Transactional
     public List<OrdersResponseDTO.OrderDetailDTO> getOrderDetail(OrdersRequestDTO.OrderEmailDTO email) {
         List<Orders> ordersList = ordersRepository.findAllByEmailOrderByCreatedAtDesc(email.getEmail());
         List<OrdersResponseDTO.OrderDetailDTO> ordersDetailDTOs = new ArrayList<>();
@@ -62,6 +65,7 @@ public class OrdersService {
         return ordersDetailDTOs;
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 14 * * ?")
     public void OrderStatusScheduler() {
         LocalDateTime start = LocalDate.now().minusDays(1).atTime(14, 0, 0);
@@ -71,6 +75,17 @@ public class OrdersService {
         for(Orders shippingOrder : shippingOrders) {
             shippingOrder.setOrderStatus(OrderStatus.SHIPPING);
             ordersRepository.save(shippingOrder);
+        }
+    }
+
+    @Transactional
+    public void deleteOrder(UUID orderId) {
+        Orders order = ordersRepository.findByOrderId(orderId);
+        if (order.getOrderStatus().equals(OrderStatus.ORDER_COMPLETE)) {
+            orderItemsRepository.deleteAllByOrders(order);
+            System.out.println("orderItem 삭제");
+            ordersRepository.deleteById(orderId);
+            System.out.println("order 삭제");
         }
     }
 
@@ -85,22 +100,26 @@ public class OrdersService {
             order.setPostcode(updateDTO.getPostcode());
 
             List<OrderItems> beforeOrderItems = order.getOrderItemsList();
+
+            // 기존 OrderItems 삭제 (연관 관계 정리)
+            order.getOrderItemsList().clear();
+            ordersRepository.saveAndFlush(order);
+
             for(OrderItems beforeOrderItem : beforeOrderItems) {
                 UUID productId = beforeOrderItem.getProducts().getProductId();
                 int productsNum = beforeOrderItem.getQuantity();
                 Products product = productsRepository.findByProductId(productId);
                 product.setStock(product.getStock() + productsNum);
                 productsRepository.save(product);
+                System.out.println(product);
+                System.out.println("product stock 복구");
             }
 
-            orderItemsRepository.deleteByOrders(order);
             List<OrderItemsRequestDTO.OrderItemsDTO> updateOrderItemsDTOs = updateDTO.getOrderItemsDTOs();
             List<OrderItems> updateOrderItems = orderItemsConverter.toOrderItemsList(updateOrderItemsDTOs);
+            updateOrderItems.forEach(orderItem -> orderItem.setOrders(order));  // 관계 설정
             order.setOrderItemsList(updateOrderItems);
-            System.out.println(updateOrderItems);
-
             ordersRepository.save(order);
-            System.out.println(order);
 
             for(OrderItems orderItem : updateOrderItems) {
                 UUID productId = orderItem.getProducts().getProductId();
@@ -109,6 +128,7 @@ public class OrdersService {
                 product.setStock(product.getStock() - productsNum);
                 productsRepository.save(product);
                 System.out.println(product);
+                System.out.println("product stock 수정 완료");
             }
         }
     }

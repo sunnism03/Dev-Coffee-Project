@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface OrdersRepository extends JpaRepository<Orders, Long> {
+public interface OrdersRepository extends JpaRepository<Orders, UUID> {
     Orders findByOrderId(UUID orderId);
     List<Orders> findAllByEmailOrderByCreatedAtDesc(String email);
     List<Orders> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
