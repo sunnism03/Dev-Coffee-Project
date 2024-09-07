@@ -48,6 +48,9 @@ public class Orders extends BaseEntity {
 
 
     // OrderItems 관련
+    public List<OrderItems> getOrderItemsList() {
+        return orderItemsList;
+    }
     public void setOrderItemsList(List<OrderItems> orderItemsList){
         this.orderItemsList = orderItemsList;
     }
