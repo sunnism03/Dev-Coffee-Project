@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/order")
@@ -22,5 +23,10 @@ public class OrdersController {
     @GetMapping("/get")
     public List<OrdersResponseDTO.OrderDetailDTO> getOrderDetail(@RequestBody OrdersRequestDTO.OrderEmailDTO request) {
         return ordersService.getOrderDetail(request);
+    }
+
+    @PutMapping("/update")
+    public void updateOrder(@RequestParam UUID orderId, @RequestBody OrdersRequestDTO.OrderDTO updateDTO) {
+        ordersService.updateOrder(orderId, updateDTO);
     }
 }
