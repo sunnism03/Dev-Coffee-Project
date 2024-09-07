@@ -2,6 +2,7 @@ package com.grepp.CoffeeProject.Orders.service;
 
 import com.grepp.CoffeeProject.OrderItems.domain.OrderItems;
 import com.grepp.CoffeeProject.Orders.converter.OrdersConverter;
+import com.grepp.CoffeeProject.Orders.domain.OrderStatus;
 import com.grepp.CoffeeProject.Orders.domain.Orders;
 import com.grepp.CoffeeProject.Orders.dto.OrdersRequestDTO;
 import com.grepp.CoffeeProject.Orders.dto.OrdersResponseDTO;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -50,8 +53,15 @@ public class OrdersService {
         return ordersDetailDTOs;
     }
 
-    @Scheduled(cron = "0 0 14")
+    @Scheduled(cron = "0 0 14 * * ?")
     public void OrderStatusScheduler() {
+        LocalDateTime start = LocalDate.now().minusDays(1).atTime(14, 0, 0);
+        LocalDateTime end = LocalDate.now().atTime(13, 59, 59);
+        List<Orders> shippingOrders = ordersRepository.findByCreatedAtBetween(start, end);
 
+        for(Orders shippingOrder : shippingOrders) {
+            shippingOrder.setOrderStatus(OrderStatus.SHIPPING);
+            ordersRepository.save(shippingOrder);
+        }
     }
 }
