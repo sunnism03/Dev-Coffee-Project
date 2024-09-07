@@ -23,23 +23,36 @@ public class Orders extends BaseEntity {
     private String postcode;
     @Column(name = "order_status", nullable = false, columnDefinition = "VARCHAR(50)")
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderStatus orderStatus = OrderStatus.ORDER_COMPLETE;
 
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderItems> orderItemsList = new ArrayList<>();
 
+
     // 생성자
     public Orders() {}
-    public Orders(UUID orderId, String email, String address, String postcode, OrderStatus orderStatus) {
-        this.orderId = orderId;
+    public Orders(String email, String address, String postcode) {
         this.email = email;
         this.address = address;
         this.postcode = postcode;
-        this.orderStatus = orderStatus;
+    }
+    public Orders(String email, String address, String postcode, List<OrderItems> orderItemsList) {
+        this.email = email;
+        this.address = address;
+        this.postcode = postcode;
+        this.orderItemsList = orderItemsList;
+    }
+
+
+    // OrderItems 관련
+    public List<OrderItems> getOrderItemsList() {
+        return orderItemsList;
+    }
+    public void setOrderItemsList(List<OrderItems> orderItemsList){
+        this.orderItemsList = orderItemsList;
     }
 
     // Getter, Setter
-
     public UUID getOrderId() {
         return orderId;
     }
@@ -82,7 +95,6 @@ public class Orders extends BaseEntity {
 
 
     // toString
-
     @Override
     public String toString() {
         return "Orders{" +
