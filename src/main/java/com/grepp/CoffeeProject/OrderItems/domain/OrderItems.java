@@ -29,6 +29,12 @@ public class OrderItems {
 
     // 생성자
     public OrderItems() {}
+    public OrderItems(Category category, Long price, int quantity, Products products) {
+        this.category = category;
+        this.price = price;
+        this.quantity = quantity;
+        this.products = products;
+    }
     public OrderItems(Long seq, Category category, Long price, int quantity, Products products, Orders orders) {
         this.seq = seq;
         this.category = category;
